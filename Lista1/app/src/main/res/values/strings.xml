@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Lista1</string>
+    <string name="pytanieZNumerem">Pytanie 1/10</string>
+    <string name="pytanie">Pytanie</string>
+    <string name="odpowiedz1">odpowiedz1</string>
+    <string name="odpowiedz2">odpowiedz2</string>
+    <string name="odpowiedz3">odpowiedz3</string>
+    <string name="odpowiedz4">odpowiedz4</string>
+
+</resources>
