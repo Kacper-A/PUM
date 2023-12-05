@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/listy_Fragment"
+        android:enabled="true"
+        android:icon="@drawable/folder"
+        android:title="Listy zadań"/>
+    <item
+        android:id="@+id/oceny_Fragment"
+        android:enabled="true"
+        android:icon="@drawable/folder"
+        android:title="Oceny" />
+</menu>
