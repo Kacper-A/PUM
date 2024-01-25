@@ -26,6 +26,7 @@ abstract class InventoryDatabase : RoomDatabase() {
 
                 // coś krzyczy na InventoryDatabase::class.java
                 Room.databaseBuilder(context, InventoryDatabase::class.java, "item_database_V2")
+                    .allowMainThreadQueries() //evil shit DO NOT TOUCH OR APP WILL NOT WORK
                     .build()
                     .also { Instance = it }
             }

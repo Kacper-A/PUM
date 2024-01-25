@@ -34,15 +34,31 @@ class ItemsRepository (private val itemDao: ItemDao){
 
 
 
-
-    fun getItems() : Flow<List<Item>>  {
-        return itemDao.getAllItems()
-    }
+/*
+    suspend fun getItems() : List<Item>  {
+        return itemDao.getAllItems().first()
+    }*/
+fun getItems() = itemDao.getAllItems()
 
     fun getItemsFromDate(date: Long): Flow<List<Item>> {
         return itemDao.getItemsFromDate(date)
     }
 
+    fun countInDate(date: Long): Int{
+        return itemDao.countInDate(date)
+    }
+
+    fun getItemFromDateDirectly(date: Long): Item {
+
+            return itemDao.getItemFromDateDirectly(date)
+
+
+    }
+
+    fun deleteAll()
+    {
+        itemDao.deleteAll()
+    }
 
 
 }

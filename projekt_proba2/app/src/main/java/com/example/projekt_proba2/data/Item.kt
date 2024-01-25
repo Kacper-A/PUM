@@ -9,8 +9,8 @@ import java.time.LocalDate
 data class Item(
     @PrimaryKey(autoGenerate = true) val id: Int,
     val date: Long, //timestamp as example 1705708800000
-    val brekafast: Int,
-    val lunch: Int,
-    val dinner: Int
+    var brekafast: Int,
+    var lunch: Int,
+    var dinner: Int
 
 )

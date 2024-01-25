@@ -16,7 +16,7 @@ import java.time.LocalDate
 class ItemViewModel(application: Application) : ViewModel() {
     private val repository: ItemsRepository
 
-    val _itemsState = MutableStateFlow<List<Item>>(emptyList())
+    var _itemsState = MutableStateFlow<List<Item>>(emptyList())
     val usersState: StateFlow<List<Item>>
         get() = _itemsState
 
@@ -38,10 +38,12 @@ class ItemViewModel(application: Application) : ViewModel() {
     private fun fetchItems() {
         println("didfetch")
         viewModelScope.launch {
-            repository.getItems().collect { items ->
 
-                _itemsState.value = items
-            }
+            println("inScopeLaunchValue"+repository.countInDate(1705881600000))
+
+
+                //_itemsState.value = items
+
         }
         println("test fetchItems(): "+_itemsState.value)
     }
@@ -53,14 +55,8 @@ class ItemViewModel(application: Application) : ViewModel() {
         }
     }
 
-    fun checkIfItemExists(date: Long, callback: (Item?) -> Unit) {
-        viewModelScope.launch {
-            _itemsFromDateState.value.find { it.date == date }?.let {
-                callback(it)
-            } ?: run {
-                callback(null)
-            }
-        }
+    fun checkIfItemExists(date: Long): Boolean {
+        return repository.countInDate(date)>0
     }
 
     fun fetchItemsFromDate(date: Long) {
@@ -79,5 +75,13 @@ class ItemViewModel(application: Application) : ViewModel() {
         }
     }
 
+    fun getItemFromDateDirectly(date: Long): Item{
+        return repository.getItemFromDateDirectly(date)
+    }
+
+    fun deleteAll()
+    {
+        repository.deleteAll()
+    }
 
 }

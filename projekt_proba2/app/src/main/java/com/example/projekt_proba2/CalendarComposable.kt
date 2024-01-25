@@ -22,16 +22,18 @@
     import androidx.compose.ui.graphics.Color
     import androidx.compose.ui.unit.sp
     import androidx.navigation.NavHostController
+    import com.example.projekt_proba2.data.ItemViewModel
     import com.kizitonwose.calendar.compose.HorizontalCalendar
     import com.kizitonwose.calendar.compose.rememberCalendarState
     import com.kizitonwose.calendar.core.CalendarDay
     import com.kizitonwose.calendar.core.daysOfWeek
     import java.time.DayOfWeek
+    import java.time.LocalDate
     import java.time.YearMonth
     import java.time.ZoneOffset
 
     @Composable
-    fun CalendarComposable(navController: NavHostController) {
+    fun CalendarComposable(viewModel: ItemViewModel, navController: NavHostController) {
 
 
         var currentMonth by remember { mutableStateOf(YearMonth.now()) }
@@ -47,6 +49,19 @@
             firstDayOfWeek = daysOfWeek.first()
 
         )
+
+        var limit = remember{viewModel.getItemFromDateDirectly(2137).brekafast}
+
+
+        var MaxOrMin = remember{
+
+            viewModel.getItemFromDateDirectly(2137).lunch != 0
+
+
+        }
+
+
+
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -81,11 +96,19 @@
 
             HorizontalCalendar(
                 state = state,
-                dayContent = { Day(it) }
+                dayContent = { Day(it,viewModel,navController,limit.toInt(),MaxOrMin) }
 
             )
             Row {
-                Text(text = "Today you ate XXXX calories",fontSize = 16.sp)
+                var todayItem = viewModel.getItemFromDateDirectly(LocalDate.now().atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli())
+                var sum =0
+                if(todayItem!=null)
+                {
+                    sum = todayItem.brekafast+todayItem.lunch+todayItem.dinner
+                }
+
+
+                Text(text = "Today you ate "+sum+" calories",fontSize = 16.sp)
             }
             Button(onClick = {
                 navController.navigate("todaysMeal")
@@ -96,7 +119,7 @@
             Spacer(modifier = Modifier.weight(1.0f))
             Button(
                 onClick = {
-                    println("hehe2")
+                    navController.navigate("settings")
                 }
                 ) {
                     Text(text = "settings",fontSize = 16.sp)
@@ -109,21 +132,57 @@
 
 
     @Composable
-    fun Day(day: CalendarDay) {
+    fun Day(day: CalendarDay,viewModel: ItemViewModel, navController: NavHostController,limit: Int,mode: Boolean) {
 
 
         // tutaj mogę zrobić coś w tym stylu że zielone tło jak cel został osiągnięty, żółte jak niedobur/nadmiar o 300 kalorii/dowolnej ilości i czerwony jak ktoś przekroczy ten próg wcześniejszy
         val isOdd = day.date.dayOfMonth % 2 != 0
-
+        var itemInGivenDate = viewModel.getItemFromDateDirectly(day.date.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli())
         Box(
+
             modifier = Modifier
                 .aspectRatio(1f)
                 .clickable {
                     // Handle the click event here
                     println("test: ${day.date.dayOfMonth} , ${day.date.month} , ${day.date.year}")
                     println("calendar click timestamp: ${day.date.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()}")
+                    navController.navigate("specificDay/${day.date.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()}")
                 }
-                .background(if (isOdd) Color.Red else Color.Green)
+                .background(
+                    if (itemInGivenDate!= null)
+                {
+                        var sum = 0
+                    sum = itemInGivenDate.lunch + itemInGivenDate.brekafast + itemInGivenDate.dinner
+                    if(sum >limit)
+                    {
+                        if(mode == false)
+                        {
+                            Color.Red
+                        }
+                        else
+                        {
+                            Color.Green
+                        }
+
+                    }
+                    else
+                    {
+                        if(mode == false)
+                        {
+                            Color.Green
+                        }
+                        else
+                        {
+                            Color.Red
+                        }
+
+                    }
+
+                }
+                else
+                {
+                    Color.Gray
+                })
                 , // This is important for square sizing!
             contentAlignment = Alignment.Center
         ) {
